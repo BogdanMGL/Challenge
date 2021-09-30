@@ -20,14 +20,12 @@ def open_website():
 
 
 def get_agencies():
-    browser.click_element_if_visible(
-        "xpath://html/body/main/div[1]/div/div/div[3]/div/div/div/div/div/div/div/div/div/a")
-    browser.wait_until_element_is_visible(
-        "xpath://html/body/main/div[1]/div/div/div[3]/div/div/div/div/div/div/div/div/div/div/div/div/div/div/div/div[1]/div/div[2]/div/div/div")
+    browser.click_element_if_visible('css:#node-23 a')
+    browser.wait_until_element_is_visible('css:#agency-tiles-container')
     list_name = browser.get_webelements(
-        "xpath://html/body/main/div[1]/div/div/div[3]/div/div/div/div/div/div/div/div/div/div/div/div/div/div/div/div[1]/div/div[2]/div/div/div/div/div/div/div/div/div/a/span[1]")
+        'css:#agency-tiles-widget span.h4.w200')
     list_spending = browser.get_webelements(
-        "xpath://html/body/main/div[1]/div/div/div[3]/div/div/div/div/div/div/div/div/div/div/div/div/div/div/div/div[1]/div/div[2]/div/div/div/div/div/div/div/div/div/a/span[2]")
+        'css:#agency-tiles-widget span.h1.w900')
     list_agencies = []
     for i in range(len(list_name)):
         list_agencies.append(
@@ -48,18 +46,17 @@ def agencies_to_the_table(agencies):
 
 
 def get_individual_investments():
-    browser.click_element_if_visible(
-        "xpath://html/body/main/div[1]/div/div/div[3]/div/div/div/div/div/div/div/div/div/div/div/div/div/div/div/div[1]/div/div[2]/div/div/div/div[1]/div[2]/div/div/div/a")
+    browser.click_element_if_visible('css:#agency-tiles-widget a')
     browser.wait_until_element_is_visible(
-        "xpath://html/body/main/div/div/div/div[4]/div/div/div/div[2]/div/div[1]/div/div/div/div/div[3]/div[2]/table", timeout="15")
+        "css:div.dataTables_scroll", timeout="50")
     browser.select_from_list_by_value(
-        "xpath://html/body/main/div/div/div/div[4]/div/div/div/div[2]/div/div[1]/div/div/div/div/div[2]/div[2]/div/label/select", "-1")
+        'css:select[name ="investments-table-object_length"]', "-1")
     browser.wait_until_page_contains_element(
-        "xpath://html/body/main/div/div/div/div[4]/div/div/div/div[2]/div/div[1]/div/div/div/div/div[3]/div[2]/table/tbody/tr", limit=158, timeout="20")
+        "css:#investments-table-object > tbody > tr", limit=209, timeout="20")
     link_list = []
     individual_investments_list = []
     row_table = browser.get_webelements(
-        "xpath://html/body/main/div/div/div/div[4]/div/div/div/div[2]/div/div[1]/div/div/div/div/div[3]/div[2]/table/tbody/tr")
+        "css:#investments-table-object > tbody > tr")
     for i in range(len(row_table)):
         td = row_table[i].find_elements_by_tag_name('td')
         individual_investments_list.append({
@@ -81,7 +78,7 @@ def get_individual_investments():
 
 def individual_investments_to_the_table(individual_investments):
     excel.create_worksheet("Individual Investments")
-    excel.set_worksheet_value("1", "1", "UII")
+    excel.set_worksheet_value("1", "1",  "UII")
     excel.set_worksheet_value("1", "2",  "Bureau")
     excel.set_worksheet_value("1", "3",  "Investment Title")
     excel.set_worksheet_value("1", "4",  "Total FY2021 Spending ($M)")
@@ -103,9 +100,8 @@ def downloads_file(link_list):
         link = link_list[i]["link"]
         browser.go_to(link)
         browser.wait_until_element_is_visible(
-            "xpath://html/body/main/div/div/div/div[1]/div/div/div/div/div[1]/div/div/div/div/div[6]/a", timeout="15")
-        browser.click_link(
-            "xpath://html/body/main/div/div/div/div[1]/div/div/div/div/div[1]/div/div/div/div/div[6]/a")
+            "css:#business-case-pdf > a", timeout="15")
+        browser.click_link("css:#business-case-pdf > a")
         path = os.path.abspath(os.curdir) + "/output/" + \
             link_list[i]["file_name"] + ".pdf"
         try:
