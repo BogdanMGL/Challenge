@@ -81,7 +81,7 @@ def get_individual_investments():
 
 def individual_investments_to_the_table(individual_investments):
     excel.create_worksheet("Individual Investments")
-    excel.set_worksheet_value("1", "1", "UII")
+    excel.set_worksheet_value("1", "1",  "UII")
     excel.set_worksheet_value("1", "2",  "Bureau")
     excel.set_worksheet_value("1", "3",  "Investment Title")
     excel.set_worksheet_value("1", "4",  "Total FY2021 Spending ($M)")
