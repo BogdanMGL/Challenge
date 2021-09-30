@@ -1,0 +1,18 @@
+1632950531925	geckodriver	INFO	Listening on 127.0.0.1:56937
+1632950531929	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "-foreground" "-no-remote" "-profile" "/tmp/rust_mozprofilepAO3W1"
+1632950532828	Marionette	INFO	Marionette enabled
+ExceptionHandler::GenerateDump cloned child 91679
+ExceptionHandler::SendContinueSignalToChild sent continue signal to child
+ExceptionHandler::WaitForContinueSignal waiting for continue signal...
+1632950570240	geckodriver	INFO	Listening on 127.0.0.1:49185
+1632950570245	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "-foreground" "-no-remote" "-profile" "/tmp/rust_mozprofileyowkqa"
+1632950570788	Marionette	INFO	Marionette enabled
+ExceptionHandler::GenerateDump cloned child 92126
+ExceptionHandler::SendContinueSignalToChild sent continue signal to child
+ExceptionHandler::WaitForContinueSignal waiting for continue signal...
+1632950571467	geckodriver	INFO	Listening on 127.0.0.1:33857
+1632950571473	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "-foreground" "-no-remote" "-profile" "/tmp/rust_mozprofileNY6ABj"
+1632950571977	Marionette	INFO	Marionette enabled
+ExceptionHandler::GenerateDump cloned child 92201
+ExceptionHandler::SendContinueSignalToChild sent continue signal to child
+ExceptionHandler::WaitForContinueSignal waiting for continue signal...
