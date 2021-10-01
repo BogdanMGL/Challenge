@@ -13,6 +13,16 @@ browser = Selenium()
 excel = Files()
 file = FileSystem()
 
+view_agencies = 'css:#node-23 a'
+table_agencies = 'css:#agency-tiles-container'
+agencia_name = 'css:#agency-tiles-widget span.h4.w200'
+agencia_spending = 'css:#agency-tiles-widget span.h1.w900'
+first_agency = 'css:#agency-tiles-widget a'
+table_individual_investment = "css:div.dataTables_scroll"
+select_number_of_row = 'css:select[name ="investments-table-object_length"]'
+row_table_individual_investment = "css:#investments-table-object > tbody > tr"
+download_link = "css:#business-case-pdf > a"
+
 
 def open_website():
     browser.set_download_directory(os.path.abspath(os.curdir) + "/output")
@@ -20,16 +30,14 @@ def open_website():
 
 
 def get_agencies():
-    browser.click_element_if_visible('css:#node-23 a')
-    browser.wait_until_element_is_visible('css:#agency-tiles-container')
-    list_name = browser.get_webelements(
-        'css:#agency-tiles-widget span.h4.w200')
-    list_spending = browser.get_webelements(
-        'css:#agency-tiles-widget span.h1.w900')
+
+    browser.click_element_if_visible(view_agencies)
+    browser.wait_until_element_is_visible(table_agencies)
+    names_list = browser.get_webelements(agencia_name)
+    list_spending = browser.get_webelements(agencia_spending)
     list_agencies = []
-    for i in range(len(list_name)):
-        list_agencies.append(
-            {"name": list_name[i].text, "spending": list_spending[i].text})
+    for name, spending in zip(names_list, list_spending):
+        list_agencies.append({"name": name.text, "spending": spending.text})
     return list_agencies
 
 
@@ -46,19 +54,17 @@ def agencies_to_the_table(agencies):
 
 
 def get_individual_investments():
-    browser.click_element_if_visible('css:#agency-tiles-widget a')
+    browser.click_element_if_visible(first_agency)
     browser.wait_until_element_is_visible(
-        "css:div.dataTables_scroll", timeout="50")
-    browser.select_from_list_by_value(
-        'css:select[name ="investments-table-object_length"]', "-1")
+        table_individual_investment, timeout="50")
+    browser.select_from_list_by_value(select_number_of_row, "-1")
     browser.wait_until_page_contains_element(
-        "css:#investments-table-object > tbody > tr", limit=209, timeout="20")
+        row_table_individual_investment, limit=209, timeout="20")
     link_list = []
     individual_investments_list = []
-    row_table = browser.get_webelements(
-        "css:#investments-table-object > tbody > tr")
-    for i in range(len(row_table)):
-        td = row_table[i].find_elements_by_tag_name('td')
+    row_table = browser.get_webelements(row_table_individual_investment)
+    for index in range(len(row_table)):
+        td = row_table[index].find_elements_by_tag_name('td')
         individual_investments_list.append({
             "UII": td[0].text,
             "bureau": td[1].text,
@@ -77,7 +83,8 @@ def get_individual_investments():
 
 
 def individual_investments_to_the_table(individual_investments):
-    excel.create_worksheet("Individual Investments")
+    worsheet_name = "Individual Investments"
+    excel.create_worksheet(worsheet_name)
     excel.set_worksheet_value("1", "1",  "UII")
     excel.set_worksheet_value("1", "2",  "Bureau")
     excel.set_worksheet_value("1", "3",  "Investment Title")
@@ -96,22 +103,22 @@ def downloads_file(link_list):
     for name in list_file:
         if name.endswith(".pdf"):
             os.remove(path_file + "/" + name)
-    for i in range(len(link_list)):
-        link = link_list[i]["link"]
+    for index in range(len(link_list)):
+        link = link_list[index]["link"]
         browser.go_to(link)
         browser.wait_until_element_is_visible(
-            "css:#business-case-pdf > a", timeout="15")
-        browser.click_link("css:#business-case-pdf > a")
+            download_link, timeout="15")
+        browser.click_link(download_link)
         path = os.path.abspath(os.curdir) + "/output/" + \
-            link_list[i]["file_name"] + ".pdf"
+            link_list[index]["file_name"] + ".pdf"
         try:
             file.wait_until_created(path, timeout="50")
         except:
-            i = i-1
+            index = index-1
             continue
 
 
-def main():
+if __name__ == "__main__":
     try:
         open_website()
         agencies = get_agencies()
@@ -122,7 +129,3 @@ def main():
         downloads_file(result["link_list"])
     finally:
         browser.close_browser()
-
-
-if __name__ == "__main__":
-    main()
